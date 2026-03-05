@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brieuc Thomas — Graphic Designer</title>
+<meta name="description" content="Brieuc Thomas, junior graphic designer basé à Paris.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+
+@font-face {
+  font-family: 'TG';
+  src: url('fonts/terminal-grotesque.ttf') format('truetype');
+  font-weight: normal; font-style: normal; font-display: swap;
+}
+
+:root {
+  --bg:     #f2f3f5;
+  --ink:    #1a1a18;
+  --accent: #0023d4;
+  --sub:    #595959;
+  --muted:  #767676;
+  --line:   #e2e2e2;
+  --fh: 'TG', 'Arial Black', sans-serif;
+  --fb: 'Outfit', sans-serif;
+  --out: cubic-bezier(.16,1,.3,1);
+  --fast: .15s;
+  --nav-h: 56px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: var(--fb); background: var(--bg); color: var(--ink); overflow: hidden; }
+
+/* ══ CURSEUR ══════════════════════════════════════ */
+* { cursor: none !important; }
+#cur {
+  position: fixed; z-index: 9999; pointer-events: none;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  transform: translate(-50%,-50%);
+  transition: width .2s var(--out), height .2s var(--out), background .2s, border-color .2s;
+  border: 0px solid transparent;
+}
+#cur.big { width: 34px; height: 34px; background: transparent; border: 1.5px solid var(--accent); }
+#cur.white { background: #fff; }
+#cur.white.big { background: transparent; border-color: #fff; }
+#cur.white { background: #fff; }
+#cur.white.big { background: transparent; border-color: #fff; }
+
+/* ══ PAGES ════════════════════════════════════════ */
+.page { position: fixed; inset: 0; opacity: 0; pointer-events: none; transition: opacity .25s var(--out); }
+.page.out { opacity: 0; pointer-events: none; }
+.page.on { opacity: 1; pointer-events: all; }
+/* Contact : pas de transition opacity, le rideau gère tout */
+
+/* ══ NAVBAR ═══════════════════════════════════════ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 52px; z-index: 1000;
+}
+.nav-name {
+  font-family: var(--fh); font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none;
+  position: relative; transition: color 0s;
+  white-space: nowrap; flex-shrink: 0;
+}
+.nav-name:hover { color: var(--accent); }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a {
+  font-family: var(--fh); font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none;
+  position: relative; transition: color 0s;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-links a.on { color: var(--accent); }
+
+/* Horloge Paris — absolute so it doesn't push other nav items */
+.nav-clock {
+  font-family: var(--fh); font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink); white-space: nowrap;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+
+
+
+
+
+
+/* Nav blanche quand fond bleu */
+#site-nav.white .nav-name,
+#site-nav.white .nav-links a,
+#site-nav.white .nav-clock { color: #fff; }
+#site-nav.white .nav-name:hover,
+#site-nav.white .nav-links a:hover { color: #fff; }
+#site-nav.white .nav-links a.on { color: #fff; }
+
+/* Footer fixe global */
+#site-foot {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: auto; padding: 0 52px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-direction: row-reverse;
+  z-index: 1000; pointer-events: none;
+}
+#site-foot a, #site-foot span {
+  font-family: var(--fb); font-size: 11px; letter-spacing: .05em;
+  color: var(--muted); text-decoration: none; pointer-events: all;
+  transition: color .35s;
+}
+#site-foot a:hover { color: var(--ink); }
+#site-foot.white a, #site-foot.white span { color: #fff; }
+#site-foot.white a:hover { color: #fff; }
+/* ══ RIDEAU NAVIGATION ════════════════════════════ */
+#nav-curtain {
+  position: fixed; inset: 0; z-index: 7000;
+  background: var(--accent);
+  pointer-events: none;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path .5s cubic-bezier(.76,0,.24,1);
+}
+#nav-curtain.up   { clip-path: inset(0 0 0% 0); pointer-events: all; }
+#nav-curtain.down { clip-path: inset(100% 0 0 0); }
+#preload {
+  position: fixed; inset: 0; z-index: 9000;
+  background: var(--accent);
+  display: grid;
+  grid-template-rows: var(--nav-h) 1fr auto;
+  padding: 0 52px;
+  pointer-events: all;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path .7s cubic-bezier(.76,0,.24,1);
+}
+#preload.out {
+  clip-path: inset(100% 0 0 0);
+  pointer-events: none;
+}
+#preload.gone { display: none; }
+.preload-body {
+  grid-row: 2;
+  display: flex; align-items: center; justify-content: flex-start;
+}
+.preload-txt {
+  display: flex;
+  /* Start centered: offset by half viewport minus own half-width */
+  transform: translateX(calc(50vw - 52px - 50%));
+  transition: transform .6s cubic-bezier(.76,0,.24,1);
+}
+.preload-txt.slide-left {
+  transform: translateX(0);
+}
+.preload-word {
+  font-family: var(--fh); font-weight: normal;
+  font-size: clamp(22px, 2.8vw, 40px);
+  line-height: 1; letter-spacing: -.01em;
+  color: #fff;
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(14px);
+  filter: blur(4px);
+  transition: opacity .4s var(--out), transform .4s var(--out), filter .4s var(--out);
+  margin-right: .25em;
+}
+.preload-word.in { opacity: 1; transform: translateY(0); filter: blur(0); }
+
+
+/* ══ RIDEAU PROJET ═══════════════════════════════════ */
+#proj-curtain {
+  position: fixed; inset: 0; z-index: 8000;
+  background: var(--accent);
+  display: grid;
+  grid-template-rows: var(--nav-h) 1fr auto;
+  padding: 0 52px;
+  pointer-events: none;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path .7s cubic-bezier(.76,0,.24,1);
+}
+#proj-curtain.in  { clip-path: inset(0 0 0 0);   pointer-events: all; }
+#proj-curtain.out { clip-path: inset(100% 0 0 0); pointer-events: none; }
+#proj-curtain .preload-body { justify-content: center; }
+.proj-txt {
+  display: flex; flex-direction: column; gap: 10px;
+  align-items: center; text-align: center;
+  width: 100%;
+}
+.proj-word {
+  font-family: var(--fh); font-weight: normal;
+  font-size: clamp(40px, 6vw, 80px);
+  line-height: 1; letter-spacing: -.02em;
+  color: #fff;
+  display: inline-block;
+  opacity: 0; transform: translateY(14px); filter: blur(4px);
+  transition: opacity .4s var(--out), transform .4s var(--out), filter .4s var(--out);
+}
+.proj-word.sub {
+  font-family: var(--fb); font-size: clamp(12px, 1.2vw, 16px); letter-spacing: .05em;
+  color: rgba(255,255,255,.5); transform: translateY(8px);
+}
+.proj-word.in { opacity: 1; transform: translateY(0); filter: blur(0); }
+
+/* ══ CONTACT RIDEAU ══════════════════════════════════ */
+
+
+
+
+
+/* ══ PAGE HOME ════════════════════════════════════ */
+#pg-home {
+  display: grid;
+  grid-template-rows: var(--nav-h) 1fr auto;
+  height: 100%; overflow: hidden;
+  padding: 0 52px;
+}
+
+/* Zone texte — centré */
+.h-body {
+  grid-row: 2;
+  display: flex; align-items: center; justify-content: flex-start;
+  padding: 0;
+}
+
+/* Grand texte TG — même style que noms projets */
+.h-txt {
+  font-family: var(--fh); font-weight: normal;
+  font-size: clamp(22px, 2.8vw, 40px);
+  line-height: 1; letter-spacing: -.01em;
+  color: var(--ink);
+  width: 50%;
+  text-align: left;
+  white-space: pre-line;
+}
+
+/* Mots en TG bleu */
+.h-txt em {
+  font-family: var(--fh); font-style: normal;
+  color: var(--accent); font-weight: 700;
+}
+
+.h-txt .hw {
+  display: inline;
+  opacity: 0;
+  filter: blur(4px);
+  transition: opacity .4s var(--out), filter .4s var(--out);
+}
+.h-txt .hw.in { opacity: 1; filter: blur(0); }
+
+/* ══ STRUCTURE PARTAGÉE (work, about, contact) ═══ */
+.pg-std {
+  display: grid;
+  grid-template-rows: var(--nav-h) 1fr auto;
+  height: 100%; overflow: hidden; padding: 0 52px;
+}
+.list-zone {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 12px 0; grid-row: 2;
+}
+
+.li {
+  display: flex; align-items: baseline; gap: 16px;
+  padding: 7px 0; border-bottom: 1px solid transparent;
+  text-decoration: none; color: var(--ink);
+  opacity: 0; transform: translateX(-10px);
+  transition: opacity .4s var(--out), transform .4s var(--out), border-color var(--fast);
+}
+.li.in { opacity: 1; transform: translateX(0); }
+.li:hover { border-bottom-color: var(--line); }
+
+.li-n { font-family: var(--fb); font-size: 12px; letter-spacing: .05em; color: var(--muted); min-width: 52px; flex-shrink: 0; transition: color var(--fast); }
+.li-t { font-family: var(--fh); font-size: clamp(22px, 2.8vw, 40px); letter-spacing: -.01em; line-height: 1; transition: color var(--fast); }
+.li-c { font-family: var(--fb); font-size: 12px; letter-spacing: .04em; color: var(--muted); padding-bottom: 1px; transition: color var(--fast); }
+.li:hover .li-n, .li:hover .li-t, .li:hover .li-c { color: var(--accent); }
+
+.li-gap { height: 18px; }
+
+.li-about {
+  display: flex; align-items: baseline; gap: 16px;
+  padding: 7px 0; border-bottom: 1px solid transparent;
+  opacity: 0; transform: translateX(-10px);
+  transition: opacity .4s var(--out), transform .4s var(--out);
+}
+.li-about.in { opacity: 1; transform: translateX(0); }
+
+/* ══ ABOUT ═══════════════════════════════════════ */
+
+/* list-zone about : grille 2x2 */
+#pg-about .list-zone {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  padding: 0;
+  height: 100%;
+  column-gap: 52px;
+  overflow: hidden;
+}
+
+/* Cellule haut-gauche : titre seul */
+.ab-top-left {
+  grid-column: 1; grid-row: 1;
+  display: flex; align-items: flex-start;
+  justify-content: flex-start;
+  padding: 32px 0 28px 0;
+}
+
+/* Cellule haut-droite : grand texte intro */
+.ab-top-right {
+  grid-column: 2; grid-row: 1;
+  display: flex; align-items: flex-end;
+  padding: 32px 0 28px 0;
+}
+
+/* Cellule bas-gauche : photo ou CV */
+.ab-bot-left {
+  grid-column: 1; grid-row: 2;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 0 80px 0;
+}
+
+.ab-bot-left--cv {
+  overflow-y: auto;
+}
+/* Cellule bas-droite : photo */
+.ab-bot-right {
+  grid-column: 2; grid-row: 2;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 0 0 80px 0;
+}
+
+/* Titre */
+.ab-title {
+  font-family: var(--fh); font-weight: normal;
+  font-size: clamp(22px, 2.8vw, 40px);
+  letter-spacing: -.01em; line-height: 1;
+  color: var(--ink);
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+/* Grand texte intro — occupe tout l'espace droit supérieur */
+.ab-intro {
+  font-family: var(--fb);
+  font-size: clamp(12px, 1.05vw, 14px);
+  line-height: 1.25; letter-spacing: .01em;
+  color: var(--sub);
+  font-weight: 400;
+  margin-bottom: 48px;
+  width: 100%;
+}
+.ab-intro em {
+  font-style: italic;
+  color: var(--muted);
+  font-size: .85em;
+}
+
+/* Photo inline */
+#ab-photo {
+  position: static !important;
+  transform: translateY(12px) !important;
+  width: 100% !important;
+  max-width: 280px;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity .4s var(--out), transform .4s var(--out);
+  margin-top: auto;
+}
+#ab-photo.in { opacity: 1; transform: translateY(0) !important; }
+#ab-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top center;
+  display: block; filter: grayscale(.1);
+}
+
+/* Label section */
+.ab-label {
+  font-family: var(--fb); font-size: 11px;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted);
+  padding: 0 0 8px;
+  border: none;
+  opacity: 0; transform: translateY(4px);
+  transition: opacity .4s var(--out), transform .4s var(--out);
+}
+.ab-label.in { opacity: 1; transform: translateY(0); }
+.ab-label-first { padding-top: 0; }
+
+/* Séparation entre les deux sections */
+.ab-section-gap { height: 24px; }
+
+/* Ligne expérience/diplôme */
+.li-about {
+  display: flex; align-items: baseline; gap: 16px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+  opacity: 0; transform: translateY(4px);
+  transition: opacity .4s var(--out), transform .4s var(--out);
+}
+.li-about.in { opacity: 1; transform: translateY(0); }
+
+/* Date */
+.li-about .li-n {
+  font-family: var(--fb); font-size: 12px;
+  letter-spacing: .03em; color: var(--muted);
+  min-width: 48px; flex-shrink: 0;
+}
+/* Titre entreprise */
+.li-about .li-t {
+  font-family: var(--fh);
+  font-size: clamp(12px, 1.2vw, 16px);
+  letter-spacing: -.01em; line-height: 1;
+  color: var(--ink); flex: 1;
+}
+/* Rôle */
+.li-about .li-c {
+  font-family: var(--fb); font-size: 11px;
+  letter-spacing: .03em; color: var(--muted);
+}
+
+/* Anim wrappers */
+.ab-intro-wrap {
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .5s var(--out), transform .5s var(--out);
+}
+.ab-intro-wrap.in { opacity: 1; transform: translateY(0); }
+
+/* Colonne gauche : À propos + intro + photo */
+.ab-left  { grid-column: 1; }
+/* Colonne droite : tableaux expériences/diplômes */
+.ab-right { grid-column: 2; }
+
+/* Photo inline dans colonne gauche (désactive fixed) */
+#ab-photo {
+  position: static !important;
+  transform: translateY(12px) !important;
+  width: clamp(120px, 14vw, 200px) !important;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  margin-top: 28px;
+  opacity: 0;
+  transition: opacity .4s var(--out), transform .4s var(--out);
+}
+#ab-photo.in { opacity: 1; transform: translateY(0) !important; }
+#ab-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top center;
+  display: block; filter: grayscale(.1);
+}
+
+/* Anim wrappers */
+.ab-intro-wrap {
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .5s var(--out), transform .5s var(--out);
+}
+.ab-intro-wrap.in { opacity: 1; transform: translateY(0); }
+
+/* Titre page */
+.ab-title {
+  font-family: var(--fh);
+  font-size: clamp(22px, 2.8vw, 40px);
+  letter-spacing: -.01em; line-height: 1;
+  color: var(--ink); font-weight: normal;
+  margin-bottom: 24px;
+}
+
+/* Texte intro */
+.ab-intro {
+  font-family: var(--fb); font-weight: 400;
+  font-size: clamp(13px, 1.3vw, 17px);
+  line-height: 1.9; letter-spacing: .01em;
+  color: var(--sub);
+  text-align: left;
+  max-width: 100%;
+}
+.ab-intro em { font-style: italic; color: var(--muted); }
+
+/* Séparateur (inutilisé mais conservé) */
+.ab-rule {
+  border: none; border-top: 1px solid var(--line);
+  margin: 28px 0 0;
+  opacity: 0; transition: opacity .5s var(--out);
+}
+.ab-rule.in { opacity: 1; }
+
+/* Label section */
+.ab-label {
+  font-family: var(--fh);
+  font-size: clamp(9px, .75vw, 11px);
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent);
+  padding: 28px 0 8px;
+  opacity: 0; transform: translateY(4px);
+  transition: opacity .4s var(--out), transform .4s var(--out);
+}
+.ab-label.in { opacity: 1; transform: translateY(0); }
+.ab-label-first { border-top: none !important; padding-top: 0; }
+
+/* Ligne expérience/diplôme */
+.li-about {
+  display: flex; align-items: baseline; gap: 20px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .4s var(--out), transform .4s var(--out);
+}
+.li-about.in { opacity: 1; transform: translateY(0); }
+
+/* Date */
+.li-about .li-n {
+  font-family: var(--fb); font-size: 12px;
+  letter-spacing: .04em; color: var(--muted);
+  min-width: 52px; flex-shrink: 0;
+}
+
+/* Titre en TG — taille lisible, pas énorme */
+.li-about .li-t {
+  font-family: var(--fh);
+  font-size: clamp(13px, 1.4vw, 18px);
+  letter-spacing: -.01em; line-height: 1;
+  color: var(--ink);
+}
+
+/* Rôle — léger, muted */
+.li-about .li-c {
+  font-family: var(--fb); font-size: 12px;
+  letter-spacing: .03em; color: var(--muted);
+}
+
+/* About page : pg-std handles side padding (0 52px), just bottom */
+#al { padding-bottom: 120px; }
+
+
+
+/* ══ WORK LIST ARROW ══════════════════════════════ */
+#wl .li-arrow {
+  width: 18px; height: 18px;
+  opacity: 0;
+  transform: translate(-8px, 8px);
+  transition: opacity .25s var(--out), transform .3s var(--out);
+  flex-shrink: 0;
+}
+#wl .li-arrow g { fill: var(--ink); transition: fill .3s var(--out) .1s; }
+#wl .li:hover .li-arrow { opacity: 1; transform: translate(0, 0); }
+#wl .li:hover .li-arrow g { fill: var(--accent); }
+#cl .li-arrow {
+  width: 18px; height: 18px;
+  opacity: 0;
+  transform: translate(-8px, 8px);
+  transition: opacity .25s var(--out), transform .3s var(--out);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+#cl .li-arrow g { fill: var(--ink); transition: fill .3s var(--out) .1s; }
+#cl .li:hover .li-arrow { opacity: 1; transform: translate(0, 0); }
+#cl .li:hover .li-arrow g { fill: var(--accent); }
+#wl .li .li-n-domain {
+  font-family: var(--fb); font-size: 11px; letter-spacing: .04em;
+  color: var(--muted); text-transform: lowercase;
+  opacity: 0;
+  transform: translate(-8px, 8px);
+  transition: opacity .25s var(--out), transform .3s var(--out), color .3s var(--out) .1s;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+#wl .li:hover .li-n-domain { opacity: 1; transform: translate(0, 0); color: var(--accent); }
+/* ══ PREVIEW (work hover) ═════════════════════════ */
+#prev {
+  position: fixed; z-index: 100; pointer-events: none;
+  width: 270px; height: 170px; overflow: hidden;
+  opacity: 0; transform: scale(.93) translateY(8px);
+  transition: opacity .25s var(--out), transform .25s var(--out);
+  border: 1px solid var(--line);
+}
+#prev.on { opacity: 1; transform: scale(1) translateY(0); }
+#prev img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+
+/* ══ PHOTO (about) ════════════════════════════════ */
+#ab-photo {
+  position: fixed; right: 52px; top: 50%; transform: translateY(calc(-50% + 12px));
+  width: clamp(140px, 15vw, 220px); aspect-ratio: 3/4;
+  overflow: hidden; pointer-events: all; opacity: 0;
+  transition: opacity .4s var(--out), transform .4s var(--out); z-index: 5;
+}
+#ab-photo.in { opacity: 1; transform: translateY(-50%); }
+#ab-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; filter: grayscale(.1); }
+
+
+
+/* Footer mobile about — même style que site-foot, caché sur desktop */
+.ab-foot-mobile { display: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+:focus:not(:focus-visible) { outline: none; }
+@media (prefers-reduced-motion: reduce) {
+  .c-track { animation: none !important; }
+  *, *::before, *::after { animation-duration:.01ms!important; transition-duration:.01ms!important; }
+}
+
+/* ══ RESPONSIVE ═══════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Désactiver curseur custom */
+  * { cursor: auto !important; }
+  #cur, #prev { display: none !important; }
+
+  :root { --nav-h: 48px; }
+
+  /* Navbar */
+  .nav { padding: 0 20px; position: fixed; justify-content: space-between; gap: 0; }
+  .nav-clock { display: none; }
+  .nav-links { gap: 20px; }
+
+  /* Footer */
+  #site-foot { padding: 0 20px 16px; flex-direction: row; justify-content: flex-start; }
+  #site-foot a { display: none; }
+
+  /* About : footer dans le flux en bas du scroll */
+  body.about-active #site-foot { display: none; }
+  .ab-foot-mobile {
+    display: flex;
+    justify-content: flex-start; align-items: center;
+    padding: 0 0 16px;
+    pointer-events: all;
+    margin-top: 48px;
+  }
+  .ab-foot-mobile a, .ab-foot-mobile span {
+    font-family: var(--fb); font-size: 11px; letter-spacing: .05em;
+    color: var(--muted); text-decoration: none; pointer-events: all;
+    transition: color .35s;
+  }
+  .ab-foot-mobile a:hover { color: var(--ink); }
+  /* CV : un seul bloc, espacements réduits */
+  .ab-section-gap { height: 8px; }
+  .li-about { padding: 4px 0; }
+  .li-about .li-t { font-size: clamp(12px, 3.5vw, 15px); }
+
+  /* Pages */
+  #pg-home, .pg-std { padding: 0 20px; }
+
+  /* Home */
+  .h-txt { width: 100%; font-size: clamp(28px, 8vw, 48px); }
+
+  /* Work list */
+  .list-zone { padding: 8px 0; }
+  .li { gap: 10px; padding: 10px 0; }
+  .li-n { min-width: 36px; font-size: 11px; }
+  .li-t { font-size: clamp(20px, 6vw, 32px); }
+  .li-c { display: none; }
+  .li-n-domain { display: none; }
+  .li-arrow { display: none; }
+
+  /* About : colonne unique, photo en premier */
+  #pg-about { overflow: visible; }
+  body.about-active { overflow-y: auto; }
+  body.about-active #pg-about {
+    position: static;
+    height: auto;
+    opacity: 1;
+    pointer-events: all;
+    overflow: visible;
+  }
+  #pg-about .list-zone {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 24px;
+    overflow-y: visible;
+    padding-top: calc(var(--nav-h) + 32px);
+    padding-bottom: 0;
+    min-height: 100vh;
+  }
+  .ab-top-left { grid-column: unset; grid-row: unset; padding: 0; order: 2; width: 100%; }
+  .ab-top-right { display: none; }
+  .ab-bot-left { grid-column: unset; grid-row: unset; padding: 0; order: 3; display: flex; flex-direction: column; flex: 1; width: 100%; }
+  .ab-bot-right { grid-column: unset; grid-row: unset; padding: 0; order: 1; align-items: flex-start; }
+  .ab-intro { font-size: clamp(14px, 4vw, 17px); line-height: 1.7; }
+  #ab-photo {
+    position: static !important;
+    transform: translateY(12px) !important;
+    width: clamp(80px, 28vw, 140px) !important;
+    margin-bottom: 32px;
+  }
+  #ab-photo.in { transform: translateY(0) !important; }
+  .ab-bot-left--cv { overflow-y: visible; }
+
+  /* Contact */
+  #cl .li { gap: 10px; }
+  #cl .li-n { min-width: 52px; }
+  #cl .li-arrow { display: none; }
+
+  /* Preload / rideau projet */
+  #preload, #proj-curtain { padding: 0 20px; }
+  .preload-word { font-size: clamp(28px, 8vw, 48px); }
+  .preload-txt { transform: translateX(0) !important; }
+  .preload-body { justify-content: center; }
+  .proj-word { font-size: clamp(28px, 8vw, 48px); }
+
+  /* Preview hover désactivé sur mobile */
+  #prev { display: none; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="preload" aria-hidden="true">
+  <div class="preload-body">
+    <p class="preload-txt"><span class="preload-word">Enchanté</span><span class="preload-word">!</span></p>
+  </div>
+</div>
+
+<div id="nav-curtain" aria-hidden="true"></div>
+
+<!-- Rideau projet -->
+<div id="proj-curtain" aria-hidden="true">
+  <div class="preload-body">
+    <p class="proj-txt"></p>
+  </div>
+</div>
+<div id="cur" aria-hidden="true"></div>
+<div id="prev" aria-hidden="true"><img id="prev-img" src="" alt=""></div>
+
+<!-- ══ HOME ══════════════════════════════════════ -->
+<main id="pg-home" class="page on">
+  <div class="h-body">
+    <p class="h-txt" id="h-txt"></p>
+  </div><!-- /h-body -->
+</main>
+
+<!-- ══ WORK — LISTE ═══════════════════════════════ -->
+<div id="pg-work" class="page pg-std">
+  <div class="list-zone" id="wl"></div>
+</div>
+
+<!-- ══ ABOUT ══════════════════════════════════════ -->
+<div id="pg-about" class="page pg-std">
+  <div class="list-zone" id="al">
+
+    <!-- Haut gauche : paragraphe -->
+    <div class="ab-top-left">
+      <div class="ab-intro-wrap">
+        <p class="ab-intro">J'ai commencé par un bac pro RPIP en production graphique, où j'ai appris la rigueur du print, puis Bachelor en infographie éco-conception à Brassart pour développer mes compétences en identité visuelle, digital et motion design. Six mois chez Renault Group au Global Brand Design m'ont appris à penser cohérence, précision et impact — moins faire joli, plus faire juste. Aujourd'hui, je recherche une alternance pour continuer à progresser, notamment en motion.</p>
+      </div>
+    </div>
+
+    <!-- Haut droite : vide -->
+    <div class="ab-top-right"></div>
+
+    <!-- Bas gauche : expériences + diplômes -->
+    <div class="ab-bot-left ab-bot-left--cv">
+      <p class="ab-label ab-label-first">Expérience</p>
+      <div class="li-about"><span class="li-n">2025</span><span class="li-t">Renault Group</span><span class="li-c">Stage · Global Brand Design</span></div>
+      <div class="li-about"><span class="li-n">2024</span><span class="li-t">Lesage-Richardeau</span><span class="li-c">Stage · Graphiste pré-presse</span></div>
+      <div class="li-about"><span class="li-n">2022</span><span class="li-t">Agence Media Think</span><span class="li-c">Stage · Graphiste & monteur vidéo</span></div>
+      <div class="li-about"><span class="li-n">2021</span><span class="li-t">Mairie de Cheillé</span><span class="li-c">Stage · Chargé de communication</span></div>
+      <div class="li-about"><span class="li-n">2020</span><span class="li-t">Rubex Pharma</span><span class="li-c">Stage · Graphiste signalétique</span></div>
+      <div class="li-about"><span class="li-n">2019</span><span class="li-t">Cherrier Marquage</span><span class="li-c">Stage · Opérateur PAO</span></div>
+      <div class="ab-section-gap"></div>
+      <p class="ab-label">Diplômes</p>
+      <div class="li-about"><span class="li-n">2023–25</span><span class="li-t">École Brassart</span><span class="li-c">Bachelor Infographie Éco-Conception</span></div>
+      <div class="li-about"><span class="li-n">2019–22</span><span class="li-t">Lycée Albert Bayet</span><span class="li-c">Bac pro RPIP · Production graphique</span></div>
+      <footer class="ab-foot-mobile"><span>© 2026 Brieuc Thomas</span></footer>
+    </div><!-- /ab-bot-left--cv -->
+
+    <!-- Bas droite : photo -->
+    <div class="ab-bot-right">
+      <div id="ab-photo"><img src="images/photo.png" alt="Brieuc Thomas"></div>
+    </div>
+  </div><!-- /list-zone -->
+</div>
+
+<!-- ══ CONTACT ════════════════════════════════════ -->
+<div id="pg-contact" class="page pg-std">
+  <div class="list-zone" id="cl">
+    <a class="li" href="mailto:brieuc.thomas@brassart.fr" target="_blank" rel="noopener">
+      <span class="li-t">Email</span>
+      <span class="li-n">brieuc.thomas@brassart.fr</span>
+      <svg class="li-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" width="18" height="18" aria-hidden="true"><g transform="translate(-6,-8)"><g transform="translate(23,23) rotate(-135) translate(-23,-23)"><g transform="translate(2,2)"><rect x="19" y="0" width="4" height="40"/></g><g transform="translate(23,23.707) rotate(45) translate(-23,-23.707) translate(7.5,8.207)"><rect x="0" y="26" width="30" height="4"/><rect x="26" y="0" width="4" height="30"/></g></g></g></svg>
+    </a>
+    <a class="li" href="https://www.behance.net/brieuc_thomas" target="_blank" rel="noopener">
+      <span class="li-t">Behance</span>
+      <span class="li-n">@brieuc_thomas</span>
+      <svg class="li-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" width="18" height="18" aria-hidden="true"><g transform="translate(-6,-8)"><g transform="translate(23,23) rotate(-135) translate(-23,-23)"><g transform="translate(2,2)"><rect x="19" y="0" width="4" height="40"/></g><g transform="translate(23,23.707) rotate(45) translate(-23,-23.707) translate(7.5,8.207)"><rect x="0" y="26" width="30" height="4"/><rect x="26" y="0" width="4" height="30"/></g></g></g></svg>
+    </a>
+    <a class="li" href="https://www.linkedin.com/in/brieuc-thomas-b0737b275" target="_blank" rel="noopener">
+      <span class="li-t">LinkedIn</span>
+      <span class="li-n">brieuc-thomas</span>
+      <svg class="li-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" width="18" height="18" aria-hidden="true"><g transform="translate(-6,-8)"><g transform="translate(23,23) rotate(-135) translate(-23,-23)"><g transform="translate(2,2)"><rect x="19" y="0" width="4" height="40"/></g><g transform="translate(23,23.707) rotate(45) translate(-23,-23.707) translate(7.5,8.207)"><rect x="0" y="26" width="30" height="4"/><rect x="26" y="0" width="4" height="30"/></g></g></g></svg>
+    </a>
+    <a class="li" href="https://instagram.com/bt.dsgn" target="_blank" rel="noopener">
+      <span class="li-t">Instagram</span>
+      <span class="li-n">@bt.dsgn</span>
+      <svg class="li-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" width="18" height="18" aria-hidden="true"><g transform="translate(-6,-8)"><g transform="translate(23,23) rotate(-135) translate(-23,-23)"><g transform="translate(2,2)"><rect x="19" y="0" width="4" height="40"/></g><g transform="translate(23,23.707) rotate(45) translate(-23,-23.707) translate(7.5,8.207)"><rect x="0" y="26" width="30" height="4"/><rect x="26" y="0" width="4" height="30"/></g></g></g></svg>
+    </a>
+    <a class="li" href="https://dribbble.com/Brieuc_Thomas" target="_blank" rel="noopener">
+      <span class="li-t">Dribbble</span>
+      <span class="li-n">Brieuc_Thomas</span>
+      <svg class="li-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" width="18" height="18" aria-hidden="true"><g transform="translate(-6,-8)"><g transform="translate(23,23) rotate(-135) translate(-23,-23)"><g transform="translate(2,2)"><rect x="19" y="0" width="4" height="40"/></g><g transform="translate(23,23.707) rotate(45) translate(-23,-23.707) translate(7.5,8.207)"><rect x="0" y="26" width="30" height="4"/><rect x="26" y="0" width="4" height="30"/></g></g></g></svg>
+    </a>
+  </div>
+</div>
+
+
+<nav id="site-nav" class="nav">
+  <a class="nav-name" href="#" onclick="go('home');return false;">Brieuc Thomas</a>
+  <div class="nav-links">
+    <a href="#" onclick="go('work');return false;"   data-page="work">Projets</a>
+    <a href="#" onclick="go('about');return false;"  data-page="about">Infos</a>
+    <a href="#" onclick="go('contact');return false;" data-page="contact">Contact</a>
+  </div>
+  <span class="nav-clock" id="nav-clock"></span>
+</nav>
+<footer id="site-foot"><a href="mailto:brieuc.thomas@brassart.fr">brieuc.thomas@brassart.fr</a><span>© 2026 Brieuc Thomas</span></footer>
+
+<script>
+'use strict';
+
+const P = [
+  { n:'01', name:'Filbleu',           cat:'Identité visuelle',             url:'https://www.behance.net/gallery/224311693/Filbleu-Brand-Refresh',           img:'https://mir-s3-cdn-cf.behance.net/projects/404/515c62224311693.Y3JvcCw3OTgsNjI0LDk0LDE2Mg.png' },
+  { n:'02', name:'Art Grafik',        cat:'Design éditorial',            url:'https://www.behance.net/gallery/210002641/Art-Grafik-Magazine-design',       img:'https://mir-s3-cdn-cf.behance.net/projects/404/17f8ea210002641.Y3JvcCwxMDA3LDc4OCwxOTcsMA.jpg' },
+  { n:'03', name:'Kryo',              cat:'Identité visuelle',             url:'https://www.behance.net/gallery/221615589/Kryo-Brand-Identity',              img:'https://mir-s3-cdn-cf.behance.net/projects/404/70df7c221615589.Y3JvcCwxMzgwLDEwODAsMjcwLDA.png' },
+  { n:'04', name:'Mirage',            cat:'Direction artistique · Musique',      url:'https://www.behance.net/gallery/218550873/Mirage-Music-Album',               img:'https://mir-s3-cdn-cf.behance.net/projects/404/2cdbf2218550873.Y3JvcCw4MDgsNjMyLDAsMA.png' },
+  { n:'05', name:'Fezibo',            cat:'Design web',                    url:'https://dribbble.com/shots/27144353-Fezibo-Website-design', img:'images/thumbnail-fezibo.png' },
+  { n:'06', name:'Petit guide du graphiste en galère', cat:'Design éditorial', url:'https://www.flipsnack.com/B7696A99E8C/petit-guide-du-graphiste-en-gal-re', img:'images/cover-guide.jpg' },
+];
+
+/* ── Curseur ── */
+const cur = document.getElementById('cur');
+document.addEventListener('mousemove', e => { cur.style.left = e.clientX+'px'; cur.style.top = e.clientY+'px'; });
+document.addEventListener('mouseover', e => { cur.classList.toggle('big', !!e.target.closest('a,button,.c-item')); });
+
+/* ── Navigation ── */
+
+function go(id) {
+  const nc = document.getElementById('nav-curtain');
+
+  // Rideau monte du bas
+  nc.classList.remove('down');
+  nc.classList.add('up');
+
+  setTimeout(function() {
+    // Pré-reset des éléments pendant que le rideau est fermé
+    if (id === 'work')         document.querySelectorAll('#wl .li').forEach(el => { el.style.transition='none'; el.classList.remove('in'); });
+    else if (id === 'contact') document.querySelectorAll('#cl .li').forEach(el => { el.style.transition='none'; el.classList.remove('in'); });
+    else if (id === 'about') {
+      document.querySelectorAll('#al .ab-intro-wrap, #al .ab-label, #al .li-about').forEach(el => { el.style.transition='none'; el.classList.remove('in'); });
+      const ph = document.getElementById('ab-photo');
+      if (ph) { ph.style.transition='none'; ph.classList.remove('in'); }
+    }
+
+    // Changer de page pendant que le rideau est fermé
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('on','out'));
+    const next = document.getElementById('pg-'+id);
+    next.classList.add('on');
+    window.scrollTo(0,0);
+    updateNav(id);
+    // Stagger déclenché pendant le reveal du rideau (voir ci-dessous)
+
+    // Rideau descend pour révéler (.5s transition)
+    setTimeout(function() {
+      nc.classList.remove('up');
+      nc.classList.add('down');
+      // Stagger démarre pendant que le rideau descend, comme le preload
+      setTimeout(function() {
+        if (id === 'work')         staggerEl('#wl .li');
+        else if (id === 'about')   staggerAbout();
+        else if (id === 'home')    staggerHome();
+        else if (id === 'contact') staggerEl('#cl .li');
+      }, 250);
+      setTimeout(function() { nc.classList.remove('down'); }, 600);
+    }, 60);
+  }, 500);
+}
+
+
+function updateNav(pageId) {
+  var nav = document.getElementById('site-nav');
+  var foot = document.getElementById('site-foot');
+  nav.querySelectorAll('[data-page]').forEach(function(a) {
+    a.classList.toggle('on', a.dataset.page === pageId);
+  });
+  nav.classList.remove('white');
+  if (foot) foot.classList.remove('white');
+  document.body.classList.toggle('about-active', pageId === 'about');
+}
+
+updateNav('home');
+function staggerHome() {
+  document.querySelectorAll('#h-txt .hw').forEach((el, i) => {
+    el.classList.remove('in');
+    setTimeout(() => el.classList.add('in'), 80 + i * 40);
+  });
+}
+function staggerEl(sel) {
+  const els = document.querySelectorAll(sel);
+  els.forEach(el => { el.style.transition = 'none'; el.classList.remove('in'); });
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      els.forEach(el => { el.style.transition = ''; });
+      els.forEach((el,i) => setTimeout(() => el.classList.add('in'), 60 + i*60));
+    });
+  });
+}
+function staggerAbout() {
+  const els = document.querySelectorAll('#al .ab-intro-wrap, #al .ab-label, #al .li-about');
+  const ph = document.getElementById('ab-photo');
+  // disable transitions during reset to avoid flash
+  els.forEach(el => { el.style.transition = 'none'; el.classList.remove('in'); });
+  if (ph) { ph.style.transition = 'none'; ph.classList.remove('in'); }
+  // re-enable and animate on next frame
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      els.forEach(el => { el.style.transition = ''; });
+      if (ph) ph.style.transition = '';
+      els.forEach((el,i) => setTimeout(() => el.classList.add('in'), 60 + i*50));
+      if (ph) setTimeout(() => ph.classList.add('in'), 200);
+    });
+  });
+}
+
+/* ── Photo hover : alternance des deux overlays ── */
+(function() {
+  var ph = document.getElementById('ab-photo');
+  if (!ph) return;
+
+  // Créer les deux overlays en position fixed
+  function makeOverlay(src) {
+    var el = document.createElement('img');
+    el.src = src;
+    el.style.cssText = 'position:fixed;pointer-events:none;opacity:0;z-index:6;object-fit:contain;transition:none;';
+    document.body.appendChild(el);
+    return el;
+  }
+  var h1 = makeOverlay('images/photohover-01.svg');
+  var h2 = makeOverlay('images/photohover-02.svg');
+
+  function syncPos() {
+    var r = ph.getBoundingClientRect();
+    [h1, h2].forEach(function(el) {
+      el.style.left   = r.left   + 'px';
+      el.style.top    = r.top    + 'px';
+      el.style.width  = r.width  + 'px';
+      el.style.height = r.height + 'px';
+    });
+  }
+
+  var timer = null, tick = 0;
+  ph.addEventListener('mouseenter', function() {
+    if (!document.getElementById('pg-about').classList.contains('on')) return;
+    syncPos();
+    tick = 0;
+    h1.style.transition = 'opacity .15s';
+    h2.style.transition = 'opacity .15s';
+    h1.style.opacity = 1; h2.style.opacity = 0;
+    timer = setInterval(function() {
+      tick++;
+      syncPos();
+      h1.style.opacity = tick % 2 === 0 ? 1 : 0;
+      h2.style.opacity = tick % 2 === 1 ? 1 : 0;
+    }, 200);
+  });
+  ph.addEventListener('mouseleave', function() {
+    clearInterval(timer);
+    h1.style.transition = 'opacity .25s';
+    h2.style.transition = 'opacity .25s';
+    h1.style.opacity = 0; h2.style.opacity = 0;
+  });
+})();
+/* ── Home : texte pixellisé ── */
+(function() {
+  // Texte avec mots TG en bleu
+  const words = [
+    { t: 'Je suis Brieuc Thomas, designer graphique junior. Ce site rassemble mon ', em: false },
+    { t: 'travail', em: true },
+    { t: ', mes ', em: false },
+    { t: 'expérimentations', em: true },
+    { t: ' et les ', em: false },
+    { t: 'projets', em: true },
+    { t: ' qui construisent mon ', em: false },
+    { t: 'regard', em: true },
+    { t: '.', em: false },
+  ];
+
+  const p = document.getElementById('h-txt');
+  words.forEach(w => {
+    const tag = w.em ? 'em' : 'span';
+    const el = document.createElement(tag);
+    el.className = 'hw';
+    el.textContent = w.t;
+    p.appendChild(el);
+  });
+
+  // stagger animation
+  document.querySelectorAll('#h-txt .hw').forEach((el, i) => {
+    setTimeout(() => el.classList.add('in'), 80 + i * 40);
+  });
+
+})();
+
+/* ── Work list ── */
+const wlEl = document.getElementById('wl');
+const prevEl = document.getElementById('prev');
+const prevImg = document.getElementById('prev-img');
+
+P.forEach((p, i) => {
+  const a = document.createElement('a');
+  a.className = 'li';
+  a.href = p.url;
+  a.target = '_self';
+  const domain = new URL(p.url).hostname.replace('www.','');
+  a.innerHTML = `<span class="li-n">${p.n}/</span><span class="li-t">${p.name}</span><span class="li-c">${p.cat}</span><span class="li-n-domain">${domain}</span><svg class="li-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" width="18" height="18" aria-hidden="true"><g transform="translate(-6,-8)"><g transform="translate(23,23) rotate(-135) translate(-23,-23)"><g transform="translate(2,2)"><rect x="19" y="0" width="4" height="40"/></g><g transform="translate(23,23.707) rotate(45) translate(-23,-23.707) translate(7.5,8.207)"><rect x="0" y="26" width="30" height="4"/><rect x="26" y="0" width="4" height="30"/></g></g></g></svg>`;
+  a.addEventListener('mouseenter', () => { prevImg.src = p.img; prevImg.style.objectFit = p.portrait ? 'contain' : 'cover'; prevImg.style.background = p.portrait ? 'var(--bg)' : ''; prevEl.classList.add('on'); });
+  a.addEventListener('mousemove', e => {
+    let x = e.clientX+28, y = e.clientY-20;
+    if (x+270 > window.innerWidth)  x = e.clientX-298;
+    if (y+200 > window.innerHeight) y = e.clientY-220;
+    prevEl.style.left = x+'px'; prevEl.style.top = y+'px';
+  });
+  a.addEventListener('mouseleave', () => prevEl.classList.remove('on'));
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    prevEl.classList.remove('on');
+    const url = p.url;
+    const domain = new URL(url).hostname.replace('www.','');
+    const platform = domain.includes('behance') ? 'Behance' : domain.includes('dribbble') ? 'Dribbble' : domain.includes('flipsnack') ? 'Flipsnack' : domain;
+    const pc = document.getElementById('proj-curtain');
+    const pt = pc.querySelector('.proj-txt');
+    pt.innerHTML = `<span class="proj-word">${p.name}</span><span class="proj-word sub">${p.cat} — ${platform}</span>`;
+    const words = pt.querySelectorAll('.proj-word');
+    pc.classList.remove('out');
+    void pc.offsetHeight;
+    pc.classList.add('in');
+    words.forEach((w, i) => setTimeout(() => w.classList.add('in'), 250 + i * 120));
+    setTimeout(() => {
+      // Remplacer l'état courant par home pour que le retour arrive sur home
+      history.replaceState({ page: 'home' }, '', '');
+      window.location.href = url;
+    }, 1600);
+  });
+  wlEl.appendChild(a);
+});
+
+/* ── Retour arrière : aller sur projets ── */
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('on','out'));
+    document.getElementById('pg-work').classList.add('on');
+    updateNav('work');
+    const pc = document.getElementById('proj-curtain');
+    pc.classList.remove('out');
+    pc.classList.add('in');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        pc.classList.remove('in');
+        pc.classList.add('out');
+        setTimeout(() => staggerEl('#wl .li'), 250);
+        setTimeout(() => pc.classList.remove('out'), 800);
+      });
+    });
+  }
+});
+if (history.state && history.state.page === 'home') {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on','out'));
+  document.getElementById('pg-work').classList.add('on');
+  updateNav('work');
+  staggerEl('#wl .li');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'a' || e.key === 'A') go('home');
+  if (e.key === 'p' || e.key === 'P') go('work');
+  if (e.key === 'i' || e.key === 'I') go('about');
+  if (e.key === 'c' || e.key === 'C') go('contact');
+});
+/* ── Horloge Paris ── */
+function updateClock() {
+  const t = new Date().toLocaleTimeString('fr-FR', {
+    timeZone: 'Europe/Paris',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
+  });
+  var cl = document.getElementById('nav-clock'); if(cl) cl.textContent = 'Paris → ' + t;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ══ Preload ══ */
+(function(){
+  const el = document.getElementById('preload');
+  const txt = el.querySelector('.preload-txt');
+  const words = el.querySelectorAll('.preload-word');
+
+  // Phase 1: words appear from center (stagger in)
+  words.forEach((w, i) => setTimeout(() => w.classList.add('in'), 80 + i * 100));
+
+  // Phase 2 at 750ms: text slides left to home position
+  setTimeout(() => {
+    txt.classList.add('slide-left');
+
+    // Phase 3 at 750+450ms: rideau monte avec flou
+    setTimeout(() => {
+      el.classList.add('out');
+      // Home text appears as rideau lifts
+      setTimeout(() => staggerHome(), 250);
+      setTimeout(() => el.classList.add('gone'), 800);
+    }, 450);
+  }, 750);
+})();
+
+/* ── Nav scramble effect (0.5s total) ── */
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function scramble(el) {
+  const original = el.dataset.original || el.textContent.trim();
+  el.dataset.original = original;
+  const duration = 300; // ms total
+  const fps = 30;
+  const interval = 1000 / fps;
+  const totalFrames = Math.round(duration / interval);
+  let frame = 0;
+  clearInterval(el._scramble);
+  el._scramble = setInterval(() => {
+    const progress = frame / totalFrames;
+    el.textContent = original.split('').map((ch, i) => {
+      if (ch === ' ') return ' ';
+      if (i / original.length < progress) return original[i];
+      return CHARS[Math.floor(Math.random() * CHARS.length)];
+    }).join('');
+    frame++;
+    if (frame > totalFrames) {
+      clearInterval(el._scramble);
+      el.textContent = original;
+    }
+  }, interval);
+}
+
+document.querySelectorAll('#site-nav .nav-links a, #site-nav .nav-name').forEach(a => {
+  // Wrap text in a span so scramble doesn't touch the <a> element itself
+  const txt = a.textContent.trim();
+  const span = document.createElement('span');
+  span.textContent = txt;
+  span.dataset.original = txt;
+  a.textContent = '';
+  a.appendChild(span);
+  // Verrouiller la largeur après le premier rendu
+  requestAnimationFrame(() => {
+    const w = span.getBoundingClientRect().width;
+    span.style.display = 'inline-block';
+    span.style.width = w + 'px';
+    span.style.overflow = 'hidden';
+    span.style.whiteSpace = 'nowrap';
+    span.style.textAlign = 'center';
+  });
+  a.addEventListener('mouseenter', () => scramble(span));
+});
+
+</script>
+</body>
+</html>
